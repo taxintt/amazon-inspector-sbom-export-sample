@@ -26,6 +26,11 @@ variable "target_cves" {
   description = "CVE IDs used to filter the impact analysis queries"
   type        = list(string)
   default     = ["CVE-2026-109618", "CVE-2026-109619"]
+
+  validation {
+    condition     = length(var.target_cves) > 0 && alltrue([for cve in var.target_cves : can(regex("^CVE-[0-9]{4}-[0-9]+$", cve))])
+    error_message = "target_cves must contain at least one ID in the form CVE-YYYY-NNNN."
+  }
 }
 
 variable "cyclonedx_report_location" {

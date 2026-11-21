@@ -13,3 +13,7 @@ output "ecr_repository_urls" {
 output "athena_workgroup" {
   value = aws_athena_workgroup.this.name
 }
+
+output "region" {
+  value = var.region
+}

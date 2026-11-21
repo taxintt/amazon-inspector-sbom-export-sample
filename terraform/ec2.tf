@@ -61,12 +61,13 @@ resource "aws_iam_instance_profile" "ec2" {
 resource "aws_instance" "this" {
   for_each = local.instances
 
-  ami                    = each.value.ami
-  instance_type          = "t3.small"
-  subnet_id              = aws_subnet.public.id
-  vpc_security_group_ids = [aws_security_group.ec2.id]
-  iam_instance_profile   = aws_iam_instance_profile.ec2.name
-  user_data              = each.value.user_data
+  ami                         = each.value.ami
+  instance_type               = "t3.small"
+  subnet_id                   = aws_subnet.public.id
+  vpc_security_group_ids      = [aws_security_group.ec2.id]
+  iam_instance_profile        = aws_iam_instance_profile.ec2.name
+  user_data                   = each.value.user_data
+  user_data_replace_on_change = true
 
   metadata_options {
     http_tokens = "required"
@@ -78,6 +79,10 @@ resource "aws_instance" "this" {
 
   tags = {
     Name = each.key
+  }
+
+  lifecycle {
+    ignore_changes = [ami]
   }
 
   depends_on = [aws_inspector2_enabler.this]
