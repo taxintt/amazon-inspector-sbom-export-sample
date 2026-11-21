@@ -48,7 +48,8 @@ Run every command from the repository root.
    The output goes to a temporary file first, so a failed export does not overwrite the existing tfvars with an empty file.
 
    ```sh
-   tmp="$(mktemp)" && ./scripts/export-sbom.sh > "$tmp" && mv "$tmp" terraform/sbom.auto.tfvars
+   tmp="$(mktemp)"
+   ./scripts/export-sbom.sh > "$tmp" && mv "$tmp" terraform/sbom.auto.tfvars || rm -f "$tmp"
    ```
 
 5. Run apply again.

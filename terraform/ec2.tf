@@ -21,8 +21,8 @@ locals {
       user_data = <<-EOT
         #!/bin/bash
         set -euxo pipefail
-        apt-get update
-        DEBIAN_FRONTEND=noninteractive apt-get install -y php8.3-cli
+        apt-get -o DPkg::Lock::Timeout=300 update
+        DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::Lock::Timeout=300 install -y php8.3-cli
       EOT
     }
     "sbom-al2023-nophp" = {
@@ -85,5 +85,9 @@ resource "aws_instance" "this" {
     ignore_changes = [ami]
   }
 
-  depends_on = [aws_inspector2_enabler.this]
+  depends_on = [
+    aws_inspector2_enabler.this,
+    aws_vpc_security_group_egress_rule.ec2_all,
+    aws_route_table_association.public,
+  ]
 }
