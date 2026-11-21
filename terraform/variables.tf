@@ -14,6 +14,11 @@ variable "al2023_php84_version" {
   description = "php8.4 version installed on sbom-al2023-php84-vuln (specify a version before the fix)"
   type        = string
   default     = "8.4.26"
+
+  validation {
+    condition     = can(regex("^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z._]+)?$", var.al2023_php84_version))
+    error_message = "al2023_php84_version must be a package version such as 8.4.26 or 8.4.26-1.amzn2023.0.1."
+  }
 }
 
 variable "bref_layer_arn" {
